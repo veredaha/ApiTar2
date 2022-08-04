@@ -1,0 +1,69 @@
+import json
+from enum import Enum
+
+class baseObj:
+
+    def __init__(self):
+        pass
+
+    def toJson(self) -> str:
+        """from class to json
+         :returns: str
+         """
+        result = {}
+        for key, val  in self.__dict__.items():
+            if val is not None:
+                if key.startswith("_"):
+                    result[key[1:]] = val
+                else:
+                    result[key] = val
+        return result
+
+
+    def __str__(self):
+        return json.dumps(self.toJson())
+
+class Pet(baseObj):
+
+    def __init__(self, id, name, category=None, photoUrls=None, tags=None, status=None)-> None:
+        self._photo_urls = None
+        self._tags = None
+        self._status = None
+        self._id = id
+        self._name = name
+        self._category = category
+        if photoUrls is not None:
+            self._photo_urls = photoUrls
+        if tags is not None:
+            self._tags = tags
+        if status is not None:
+            Status[status]
+            self._status = status
+
+
+class Status(Enum):
+    available = "available"
+    pending = "pending"
+    sold = "sold"
+
+class Tag(baseObj):
+    def __init__(self,id = None, name = None) -> None:
+        self._id = None
+        self._name = None
+        if id is not None:
+            self._id = id
+        if name is not None:
+            self._name = name
+
+class Category(baseObj):
+
+    def __init__(self, id=None, name=None):
+
+        self._id = None
+        self._name = None
+        if id is not None:
+            self._id = id
+        if name is not None:
+            self._name = name
+
+
