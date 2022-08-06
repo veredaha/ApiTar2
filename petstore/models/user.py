@@ -1,16 +1,22 @@
 
 class User():
-    def __init__(self,id : int, username:str,firstname:str,lastname:str,email:str,password:str,phone :str, userstatus:int) -> None:
+    def __init__(self,id : int, username:str,firstName:str,lastName:str,email:str,password:str,phone :str, userStatus:int) -> None:
+        """function creates class User
+         :returns: None 
+         """
         self._id = id	
         self._username = username
-        self._firstName = firstname
-        self._lastName	= lastname
+        self._firstName = firstName
+        self._lastName	= lastName
         self._email	=email
         self._password	= password 
         self._phone	= phone
-        self._userStatus = userstatus
+        self._userStatus = userStatus
 
     def toJson(self) -> str:
+        """from class to json
+         :returns: str
+         """
         result = {}
         for key, val  in self.__dict__.items():
             if val is not None:
