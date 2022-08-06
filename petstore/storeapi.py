@@ -1,8 +1,7 @@
+from urllib import response
 from models.pet import Pet
 from models.order import Order
 from models.order import Status
-
-
 
 import json
 import requests
@@ -11,52 +10,60 @@ import requests
 
 class storeApi():
 
-    def __init__(self, url)-> None:
+    def __init__(self, url,headrs)-> None:
+        """function creates class storeApi
+         :returns: None 
+         """
         self.url = url
-        self.headrs = {'accept': 'application/json'}
+        self.headrs = headrs
         self.session = requests.session()
         self.session.headers.update(self.headrs)
 
 
     def get_inventory(self)-> list:
         """ get inventory
-     :returns: pet
+        :returns: list
          """
         res = self.session.get(url=f"{self.url}/store/inventory")
-        inventoey = res.json()
-        result = [] 
         if res.status_code == 200:
-         for a in inventoey:
-            result.append(a)
-         return result 
+         inventoey = res.json()
+         return inventoey 
         else:
             return None
 
-    def place_order(self,order:Order):
+    def place_order(self,order:Order)->Order:
         """ place order
-        :returns: pet
+        :param:oreder->Order
+        :returns: order
           """
         order_data = order.toJson()
-        res = self.session.post(url=f"{self.url}/pet", data=order_data)
+        res = self.session.post(url=f"{self.url}/store/order", data=order_data)
         if res.status_code == 200:
-            ord = res.json()
+            ord = Order(**res.json())
             return ord
         else:
             return None
 
-    def get_purchase_by_id(self, order_id):
-        res = self.session.get(url=f"{self.url}/order/{order_id}")
+    def get_purchase_by_id(self, order_id:int)->Order:
+        """ get purchase by id
+        :param:oreder->Order
+        :returns: order
+          """
+        res = self.session.get(url=f"{self.url}/store/order/{order_id}")
+        print(res)
         if res.status_code == 200:
-            order = res.json()
-            my_pet = Pet(**order)
-            return my_pet  
+            my_order = Order(**res.json())
+            return my_order
         else:
             return None
 
-    def delete_order_by_id(self,order_id):
-        res = self.session.delete(url=f"{self.url}/order/{order_id}")
-        return res.status_code
-
+    def delete_order_by_id(self,order_id:int)->response:
+        """ delete order by id
+        :param:order_id->int
+        :returns: order
+          """
+        res = self.session.delete(url=f"{self.url}/store/order/{order_id}")
+        return res
 
 
 
