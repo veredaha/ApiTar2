@@ -26,25 +26,20 @@ class BookModal():
                     result[key] = val
         return result
 
-class AllBooksModal(BookModal):
-    def __init__(self,BookModal:BookModal)->None:
+class AllBooksModal():
+    def __init__(self,books:list)->None:
         """function creates class AllBooksModal
          :returns: None 
          """
-        self._BookModel =BookModal
+        self._books = books
 
-    def toJson(self) -> str:
-        """from class to json
-         :returns: str
-        """
-        result = {}
-        for key, val  in self.__dict__.items():
-            if val is not None:
-                if key.startswith("_"):
-                    result[key[1:]] = val
-                else:
-                    result[key] = val
-        return result
+
+            
+
+
+
+
+    
 
 class GetUserResult:
     def __init__(self,userId:str, username:str,books:BookModal) -> None:
@@ -70,12 +65,12 @@ class GetUserResult:
         return result
 
 class CreateUserResult:
-    def __init__(self,userId:str, username:str,books:list) -> None:
+    def __init__(self,userID:str, username:str,books:list) -> None:
         """
-           function creates class CreateUserResul
+           function creates class CreateUserResult
            :returns: None 
         """
-        self._userId	=userId
+        self._userID	=userID
         self._username	=username
         self._books =books
 
