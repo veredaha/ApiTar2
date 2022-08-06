@@ -9,6 +9,9 @@ import requests
 class petApi():
 
     def __init__(self, url:str, headers:str)-> None:
+        """function creates class petApi
+         :returns: None 
+         """
         self.url = url
         self.headrs = headers
         self.session = requests.session()
@@ -118,3 +121,4 @@ class petApi():
             return my_pet
         else:
             return None
+
