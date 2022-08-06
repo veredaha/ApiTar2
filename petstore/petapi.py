@@ -1,9 +1,6 @@
 
 from models.pet import Pet
 from models.pet import Status
-
-
-
 import json
 import requests
 
@@ -17,41 +14,42 @@ class petApi():
         self.session = requests.session()
         self.session.headers.update(self.headrs)
 
-    def update_pet(self,pet:Pet):
+    def update_pet(self,pet:Pet)->Pet:
         """ update pet
-     :returns: pet
-     """
+        :param:pet->Pet
+        :returns: pet
+         """
         my_pet = pet.toJson()
         res = requests.put(url=f"{self.url}/pet", json=my_pet)
         if res.status_code == 200:
+            my_pet = Pet(**res.json())
             return my_pet
         else:
             return None
         
-    def post_new_pet(self,pet )->Pet:
-        """ get new pet
-     :returns: pet
-     """
+    def post_new_pet(self,pet:Pet )->Pet:
+        """ add new pet
+        :param:pet->Pet
+          :returns: pet
+        """
         pet_data = pet.toJson()
         res = self.session.post(url=f"{self.url}/pet", data=pet_data)
-        pet = res.json()
         if res.status_code == 200:
-            my_pet = Pet(**pet)
+            my_pet = Pet(**res.json())
             return my_pet
         else:
             return None
 
-    def get_pet_by_status(self, status) -> list:
+    def get_pet_by_status(self, status:Status) -> list:
         """ get pet by status
-     :returns: pet
-     """
+        :param: stataus->Status
+          :returns: pet
+          """
         res = self.session.get(url=f"{self.url}/pet/findByStatus?status={Status[status].value}")
-        pets = res.json()
         result = [] 
         if res.status_code == 200:
+         pets = res.json()
          for a in pets:
-            pet = res.json()
-            pet = Pet(**a)
             result.append(pet)
          return result 
         else:
@@ -62,24 +60,23 @@ class petApi():
      :returns: pet
      """
         res = self.session.get(url=f"{self.url}/pet/findByTags?tags={tags}")
-        pets = res.json()
-        result = [] 
+        result=[]
         if res.status_code == 200:
+         pets = res.json()
          for a in pets:
-            pet = Pet(**a)
             result.append(pet)
          return result 
         else:
             return None
 
     def get_pet_by_id(self,pet_id : int)->Pet:
-        """ get pet
-     :returns: pet
-     """
+        """ get pet by id
+        :param: pet_id->int
+        :returns: pet
+        """
         res = self.session.get(url=f"{self.url}/pet/{pet_id}")
         if res.status_code == 200:
-            pet = res.json()
-            my_pet = Pet(**pet)
+            my_pet = Pet(**res.json())
             return my_pet  
         else:
             return None
@@ -87,40 +84,37 @@ class petApi():
 
     def update_with_form_data(self ,pet:Pet,petid:int, petname:str, petstatus:str)->Pet:
         """ update pet
-     :returns: pet
-     """
+        :param: pet->Pet
+        :param: pet_id->int
+        :param: petname->str
+        :param: petstatus->str
+        :returns: pet
+        """
         pet_data = pet.toJson()
         res = self.session.post(url=f"{self.url}/pet/{petid}?name={petname}&status={petstatus}", data=pet_data)
         if res.status_code == 200:
-            pet = res.json()
-            my_pet = Pet(**pet)
+            my_pet = Pet(**res.json())
             return my_pet
         else:
             return None
 
     def delete_pet(self,petid:int)->Pet:
         """ delete pet
+     :param:oetid->id
      :returns: pet
      """
         res = self.session.delete(url=f"{self.url}/pet/{petid}")
-        return res.status_code
+        return res
             
-    def upload_image(self,image:str,petid:int):
+    def upload_image(self,image:str,petid:int)->Pet:
         """ upload image
-     :returns: pet
+        :param: image->str
+        :param:petid->int
+        :returns: pet
      """
         res = self.session.post(url=f"{self.url}/pet/{petid}/uploadImage", data=image)
-        pet = res.json()
         if res.status_code == 200:
-            my_pet = Pet(**pet)
+            my_pet = Pet(**res.json())
             return my_pet
         else:
             return None
-
-"""
-url = "https://petstore3.swagger.io/api/v3"
-api7 = petApi(url)
-pet = Pet(10, 'vv', None, None ,None,None)  
-image = '/tmp/inflector7440998430605450804.tmp'
-r = api7.upload_image(image,10)
-print(r)"""
