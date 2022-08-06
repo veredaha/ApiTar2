@@ -1,80 +1,74 @@
 import json
 import requests
-from models.tokenviewmodel import LoginViewModel
-from models.tokenviewmodel import TokenViewModel
-from models.bookmodel import BookModal
-from models.bookmodel import GetUserResult
+
+from models.bookmodel import AllBooksModal, BookModal,GetUserResult
+from models.collectionofIsbn import AddListOfBooks,CollectionOfIsbn
+from models.userbooksresult import ReplaceIsbn,MessageModal,StringObject,BooksResult,UserBooksResult
 
 
-url = 'https://bookstore.toolsqa.com/Account/v1/GenerateToken'
-def bearer_auth_session(url:str)-> requests:
-     """ bearer authontication
-     :param: url -> str
-     :returns: session
-     """
-     User ={ "userName": "veredaharonov",
-                "password": "12345@Aa"}
-     hader = {'accept': 'application/json'}
-     res = requests.post( url = f"{url}" ,data=User,headers=hader)
-     my_token = res.json()["token"]
-     session = requests.session()
-     session.headers.update(hader)
-     session.headers.update({'Authorization': f'Bearer {my_token}'})
-     return session
 
 
 class BookStoreApi():
 
- def __init__(self, url:str,headrs:str)-> None:
+ def __init__(self, url:str,headers:str)-> None:
         """function creates class BookStoreApi
-         :returns: None 
+        :returns: None 
          """
-        self.url = url
-        self.headrs = headrs
-        self.session = requests.session()
-        self.session.headers.update(self.headrs)
+        self._url = url
+        self._headers = headers
+        self._session = requests.session()
+        self._session.headers.update(self._headers)
 
- def get_books(self) -> BookModal:
+ def get_books(self) :
     """ get books
      :param: url -> str
      :returns: session
      """
-    res = self.session.get(url=f"{self.url}/BookStore/v1/Books")
+    res = self._session.get(url=f"{self._url}/Books", headers=self._headers)
     if res.status_code == 200:
-            book = res.json()
-            my_book = BookModal(**book)
-            return my_book
+            books = res.json()['books']
+            allbooks =[]
+            for b in books:
+              a = BookModal(**b)
+              allbooks.append(a)
+            classlist = AllBooksModal(allbooks)
+            return classlist._books
     else:
             return None
 
- def post_book(self,book: BookModal) -> BookModal:
-     """ post book
-     :param: book -> str
+ def post_book(self,book: BookModal) -> AddListOfBooks:
+     """ post new book
+     :param: book -> BookModal
      :returns: book
      """
      book_data = book.toJson()
-     res = self.session.post(url=f"{self.url}/BookStore/v1/Books", data=book_data)
-     book = res.json()
+     res = self._session.post(url=f"{self._url}/Books", data=book_data)
      if res.status_code == 200:
-            my_book = BookModal(**book)
+            book = res.json()
+            my_book = CollectionOfIsbn(**book)
             return my_book
      else:
             return None
 
- def delete_book(self)-> BookModal:
+ def delete_book(self,id)-> MessageModal:
      """ delete book
      :param: book -> str
      :returns: book
      """
-     res = self.session.delete(url=f"{self.url}/BookStore/v1/Books")
-     return res.status_code
+     res = self._session.delete(url=f"{self._url}/Books?UserId={id}" ,headers=self._headers)
+     if res.status_code == 200:
+            book = res.json()
+            my_book = MessageModal(**book)
+            return my_book
+     else:
+            return None
  
  def get_book_by_isbn(self,isbn:str)-> BookModal:
-  """ get book
+  """ get book by isbn
      :param: isbn -> str
-     :returns: book
+     :returns: book ->BookModal
      """
-  res = self.session.get(url=f"{self.url}/BookStore/v1/Books")
+  res = self._session.get(url=f"{self._url}/Book?ISBN={isbn}",headers=self._headers)
   if res.status_code == 200:
             book = res.json()
             my_book = BookModal(**book)
@@ -82,17 +76,30 @@ class BookStoreApi():
   else:
             return None
   
-
-def put_book(self,book:BookModal)-> BookModal:
-     """ put book
-     :param: book -> BookModal
+ def delete_book_by_isbn(self,string:StringObject)-> MessageModal:
+     """ delete book by isbn
+     :param: isbn -> str
      :returns: book
      """
-     book_data = book.toJson()
-     res = self.session.post(url=f"{self.url}/BookStore/v1/Books", data=book_data)
-     book = res.json()
+     string = string.toJson()
+     res = self._session.delete(url=f"{self._url}/Books" ,data =string,headers=self._headers)
      if res.status_code == 200:
-            my_book = BookModal(**book)
-            return my_book
+            dele = res.json()
+            my_dele = UserBooksResult(**dele)
+            return my_dele
+     else:
+            return None
+ def put_book(self,isbn:str,replace:ReplaceIsbn)-> BookModal:
+     """ put book
+     :param: isbn->str
+     :param: replace-> ReplaceIsbn
+     :returns: book
+     """
+     replace = replace.toJson()
+     res = self._session.put(url=f"{self._url}/Books/{isbn}" ,data=replace,headers=self._headers)
+     if res.status_code == 200:
+            new = res.json()
+            newisbn = ReplaceIsbn(**new)
+            return newisbn
      else:
             return None
