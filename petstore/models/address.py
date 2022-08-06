@@ -1,5 +1,5 @@
-from pet import baseObj
-class Addess(baseObj):
+
+class Addess():
     """function creates class Addess
          :returns: None 
          """
