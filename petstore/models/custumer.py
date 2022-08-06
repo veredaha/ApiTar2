@@ -1,5 +1,4 @@
-from pet import baseObj
-class Customer(baseObj):
+class Customer():
     """function creates class Customer
          :returns: None 
          """
