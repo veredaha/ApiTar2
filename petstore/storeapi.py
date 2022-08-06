@@ -10,7 +10,7 @@ import requests
 
 class storeApi():
 
-    def __init__(self, url,headrs)-> None:
+    def __init__(self, url:str,headrs:str)-> None:
         """function creates class storeApi
          :returns: None 
          """
@@ -64,7 +64,5 @@ class storeApi():
           """
         res = self.session.delete(url=f"{self.url}/store/order/{order_id}")
         return res
-
-
 
 
