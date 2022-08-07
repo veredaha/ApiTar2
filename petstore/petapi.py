@@ -55,7 +55,7 @@ class petApi():
          pets = res.json()
          for a in pets:
             pet = Pet(**a)
-            result.append(a)
+            result.append(pet)
          return result 
         else:
             return None
@@ -69,6 +69,7 @@ class petApi():
         if res.status_code == 200:
          pets = res.json()
          for a in pets:
+            pet = Pet(**a)
             result.append(pet)
          return result 
         else:
