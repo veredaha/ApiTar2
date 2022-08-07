@@ -1,6 +1,7 @@
 
-please install:
-pip install json
-pip install  requests
-pip install  pytest
-pip install  logging
+Requirements:
+allure-pytest         2.9.45
+allure-python-commons 2.9.45
+pytest                7.1.2
+requests              2.28.1
+
