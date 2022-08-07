@@ -81,7 +81,7 @@ def test_get_by_status(api:petApi)->None:
  """
  mylogger.info("test for getting pets by status")
  pets =  api.get_pet_by_status("available")
- assert   pets[0]._status == "available"
+ assert   pets[0]['status'] == "available"
 
 def test_get_by_tags(api:petApi)->None:
  """
