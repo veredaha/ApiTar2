@@ -1,4 +1,5 @@
 
+
 from models.pet import Pet
 from models.pet import Status
 import json
@@ -46,14 +47,15 @@ class petApi():
     def get_pet_by_status(self, status:Status) -> list:
         """ get pet by status
         :param: stataus->Status
-          :returns: pet
+          :returns: list
           """
         res = self.session.get(url=f"{self.url}/pet/findByStatus?status={Status[status].value}")
         result = [] 
         if res.status_code == 200:
          pets = res.json()
          for a in pets:
-            result.append(pet)
+            pet = Pet(**a)
+            result.append(a)
          return result 
         else:
             return None
@@ -121,4 +123,3 @@ class petApi():
             return my_pet
         else:
             return None
-
